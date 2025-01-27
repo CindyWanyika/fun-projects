@@ -2,18 +2,14 @@
 import sys,pygame as pg
 
 pg.init()
-screen_size=600,600
+screen_size=750,750
 screen=pg.display.set_mode(screen_size)
 
-#def background():
-    #code for it
-    
+from dokusan import generators
+import numpy as np
+my_array=generators.random_sudoku(avg_rank=100)
 
-#set up a game loop
-def gameLoop():
-    for event in pg.event.get():
-        if event.type==pg.QUIT:sys.exit()
-    #background()    
+#convert the array to a 9*9 grid using numpy
+grid=np.array(my_array)
 
-while 1:
-    gameLoop()        
+print(grid)
