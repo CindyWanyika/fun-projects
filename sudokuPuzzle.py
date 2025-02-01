@@ -10,7 +10,6 @@ screen=pg.display.set_mode(screen_size)
 def generate_puzzle(difficulty):
     my_array=generators.random_sudoku(avg_rank=difficulty)
 
-    #convert the array to a 9*9 grid using numpy
     grid=np.array(list(str(my_array)), dtype=int)
 
     return(grid.reshape(9,9))
@@ -21,13 +20,13 @@ puzzle=generate_puzzle(100)
 def background():
     #code for it
     screen.fill(pg.Color("White"))
-    pg.draw.rect(screen,pg.Color("lightblue"),pg.Rect(15,15,720,720),10)
+    pg.draw.rect(screen,pg.Color("pink"),pg.Rect(15,15,720,720),10)
     i=1
     #draw the grids
     while (i*80)<720:
         line_width=5 if i%3>0 else 10
-        pg.draw.line(screen,pg.Color("lightblue"),pg.Vector2(((i*80)+15),15),pg.Vector2(((i*80)+15),735),line_width)
-        pg.draw.line(screen,pg.Color("lightblue"),pg.Vector2((15,(i*80)+15)),pg.Vector2(735,((i*80)+15)),line_width)
+        pg.draw.line(screen,pg.Color("pink"),pg.Vector2(((i*80)+15),15),pg.Vector2(((i*80)+15),735),line_width)
+        pg.draw.line(screen,pg.Color("pink"),pg.Vector2((15,(i*80)+15)),pg.Vector2(735,((i*80)+15)),line_width)
 
         i+=1
 
