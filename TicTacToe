@@ -1,0 +1,107 @@
+import sys
+import pygame as pg
+
+pg.init()
+screen_size = 400, 400
+screen = pg.display.set_mode(screen_size)
+
+# Initial game state
+gamestate = [" ", " ", " ", "X", "X", "O", "O", " ", " "]
+
+#Ai plays the first move to the cell 8
+gamestate[8]="X"
+
+game_over = False
+message = " "
+
+def ai_move(other):
+    global gamestate, game_over, message
+
+    if gamestate == [" ", "O", " ", "X", "X", "O", "O", " ", "X"] or gamestate==[" ", " ", "O", "X", "X", "O", "O", " ", "X"] or gamestate==[" ", " " , " ", "X", "X", "O", "O", "O", "X"]:  
+        gamestate[other] = "O"
+        gamestate[0] = "X"
+        message = "Game over, AI wins!"
+        game_over = True
+        print("AI wins!")
+        return
+    if other == 0:
+        gamestate[other] = "O"
+        gamestate[1] = "X"
+        return
+    elif other == 2:
+        gamestate[other] = "O"
+        gamestate[7] = "X"
+        message = "Game over, AI wins!"
+        game_over = True
+        return
+    elif other == 7:
+        gamestate[other] = "O"
+        gamestate[2] = "X"
+        message = "Game over, Draw!"
+        game_over = True
+        return
+
+#Code for pygame GUI
+
+# Function to draw the background and grid
+def background():
+    screen.fill(pg.Color("White"))
+    pg.draw.rect(screen, pg.Color("pink"), pg.Rect(15, 15, 240, 240), 10)
+    for i in range(1, 3):
+        line_width = 5 if i % 3 > 0 else 10
+        pg.draw.line(screen, pg.Color("pink"), (15 + i * 80, 15), (15 + i * 80, 255), line_width)
+        pg.draw.line(screen, pg.Color("pink"), (15, 15 + i * 80), (255, 15 + i * 80), line_width)
+
+# Function to draw numbers (X or O) on the board
+def draw_numbers():
+    font = pg.font.Font(None, 60)
+    for index in range(0,9):
+        row, col = index // 3, index % 3
+        num_text = font.render(str(gamestate[index]), True, pg.Color("black"))
+        screen.blit(num_text, (col * 80 + 35, row * 80 + 25))
+
+def draw_game_over():
+    if game_over:
+        font = pg.font.Font(None, 50)
+        text_surface = font.render(message, True, pg.Color("red"))
+        screen.blit(text_surface, (50, 300))
+
+# Convert mouse position to cell index
+def get_cell_index(x, y):
+    if 15 <= x <= 255 and 15 <= y <= 255:
+        col, row = (x - 15) // 80, (y - 15) // 80
+        return row * 3 + col
+    return None
+
+# Handle player's click (move)
+def handle_click(x, y):
+    global gamestate, game_over
+    if game_over:
+        return
+
+    cell_index = get_cell_index(x, y)
+    if cell_index is not None and gamestate[cell_index] == " ":
+        gamestate[cell_index] = "O"
+        if not game_over: 
+            ai_move(cell_index)
+
+
+
+def gameLoop():
+    global game_over
+    while True:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                sys.exit()
+            elif event.type == pg.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                handle_click(x, y)
+
+        
+        background()
+        draw_numbers()
+        draw_game_over() 
+        pg.display.flip()
+
+
+gameLoop()
